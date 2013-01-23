@@ -228,15 +228,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
           </execution>
         </executions>
       </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.0</version>
-        <configuration>
-          <tagBase>https://connid.googlecode.com/svn/bundles/openam/tags</tagBase>
-        </configuration>
-      </plugin>
     </plugins>
         
     <testResources>
