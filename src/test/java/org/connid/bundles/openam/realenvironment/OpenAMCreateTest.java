@@ -23,7 +23,10 @@
  */
 package org.connid.bundles.openam.realenvironment;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.connid.bundles.openam.OpenAMConnector;
 import org.connid.bundles.openam.utilities.SharedMethodsForTests;
 import org.connid.bundles.openam.utilities.TestAccountsValue;
@@ -38,10 +41,15 @@ import org.junit.Test;
 public class OpenAMCreateTest extends SharedMethodsForTests {
 
     private OpenAMConnector connector = null;
+
     private Name name = null;
+
     private Uid newAccount = null;
+
     private TestAccountsValue attrs = null;
+
     private final static boolean ACTIVE_USER = true;
+
     private final static boolean INACTIVE_USER = false;
 
     @Before
@@ -57,7 +65,7 @@ public class OpenAMCreateTest extends SharedMethodsForTests {
         newAccount = connector.create(ObjectClass.ACCOUNT,
                 createSetOfAttributes(name, attrs.getPassword(),
                 ACTIVE_USER), null);
-        Assert.assertEquals(name.getNameValue(), newAccount.getUidValue());
+        assertEquals(name.getNameValue(), newAccount.getUidValue());
         connector.delete(ObjectClass.ACCOUNT, newAccount, null);
     }
 
@@ -66,7 +74,7 @@ public class OpenAMCreateTest extends SharedMethodsForTests {
         newAccount = connector.create(ObjectClass.ACCOUNT,
                 createSetOfAttributes(name, attrs.getPassword(),
                 ACTIVE_USER), null);
-        Assert.assertEquals(name.getNameValue(), newAccount.getUidValue());
+        assertEquals(name.getNameValue(), newAccount.getUidValue());
         boolean userExists = false;
         try {
             connector.create(ObjectClass.ACCOUNT,
@@ -76,7 +84,7 @@ public class OpenAMCreateTest extends SharedMethodsForTests {
         } catch (Exception e) {
             userExists = true;
         }
-        Assert.assertTrue(userExists);
+        assertTrue(userExists);
         connector.delete(ObjectClass.ACCOUNT, newAccount, null);
     }
 
@@ -96,7 +104,7 @@ public class OpenAMCreateTest extends SharedMethodsForTests {
         newAccount = connector.create(ObjectClass.ACCOUNT,
                 createSetOfAttributes(name, attrs.getPassword(),
                 ACTIVE_USER), null);
-        Assert.assertNotNull(connector.authenticate(
+        assertNotNull(connector.authenticate(
                 ObjectClass.ACCOUNT, newAccount.getUidValue(),
                 attrs.getGuardedPassword(), null));
         connector.delete(ObjectClass.ACCOUNT, newAccount, null);

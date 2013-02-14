@@ -32,8 +32,8 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
   <parent>
-    <artifactId>connid</artifactId>
     <groupId>org.connid</groupId>
+    <artifactId>connid</artifactId>
     <version>1.3.3-SNAPSHOT</version>
   </parent>
     
@@ -68,8 +68,8 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   </issueManagement>
 
   <ciManagement>
-    <system>Jenkins</system>
-    <url>http://jenkins.tirasa.net/job/ConnId%20bundle%20OpenAM%20(master)/</url>
+    <system>Travis CI</system>
+    <url>https://travis-ci.org/Tirasa/ConnIdOpenAMBundle</url>
   </ciManagement>
 
   <mailingLists>
@@ -99,14 +99,12 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <groupId>org.connid</groupId>
       <artifactId>connid-framework</artifactId>
       <version>${base.version}</version>
-      <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>org.connid</groupId>
       <artifactId>connid-framework-internal</artifactId>
       <version>${base.version}</version>
-      <scope>runtime</scope>
     </dependency>
         
     <!--********************* REST *****************************-->
@@ -115,16 +113,10 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <artifactId>commons-httpclient</artifactId>
       <version>${commons-httpclient.version}</version>
     </dependency>
-    <!--        <dependency>
-        <groupId>commons-codec</groupId>
-        <artifactId>commons-codec</artifactId>
-        <version>${commons-codec.version}</version>
-    </dependency>-->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
       <version>${spring-web.version}</version>
-      <type>jar</type>
     </dependency>
     <!--********************* REST *****************************-->
         
@@ -146,7 +138,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     
   <profiles>
     <profile>
-      <id>real</id>
+      <id>it</id>
       <build>
         <plugins>            
           <plugin>
@@ -174,9 +166,10 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       </build>
     </profile>
   </profiles>
+  
   <build>
         
-    <plugins>            
+    <plugins>       
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -238,11 +231,15 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   </build>
 
   <repositories>
-     <repository>
-        <id>sonatype</id>
-        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        <releases><enabled>false</enabled></releases>
-        <snapshots><enabled>true</enabled></snapshots>
-     </repository>
+    <repository>
+      <id>sonatype</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
   </repositories>
 </project>

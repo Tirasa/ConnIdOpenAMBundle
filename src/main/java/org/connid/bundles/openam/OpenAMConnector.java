@@ -106,8 +106,7 @@ public class OpenAMConnector implements Connector, CreateOp, UpdateOp,
             final Set<Attribute> set, final OperationOptions oo) {
         Uid uidResult = null;
         try {
-            uidResult = new OpenAMUpdate(
-                    oc, openAMConfiguration, uid, set).update();
+            uidResult = new OpenAMUpdate(oc, openAMConfiguration, uid, set).update();
         } catch (UnsupportedEncodingException ex) {
             LOG.error("Encoding error", ex);
         }
@@ -135,8 +134,7 @@ public class OpenAMConnector implements Connector, CreateOp, UpdateOp,
     }
 
     @Override
-    public final FilterTranslator createFilterTranslator(final ObjectClass oc,
-            final OperationOptions oo) {
+    public final FilterTranslator<String> createFilterTranslator(final ObjectClass oc, final OperationOptions oo) {
         if (oc == null || (!oc.equals(ObjectClass.ACCOUNT))) {
             throw new IllegalArgumentException("Invalid objectclass");
         }
@@ -146,6 +144,7 @@ public class OpenAMConnector implements Connector, CreateOp, UpdateOp,
     @Override
     public final void executeQuery(final ObjectClass oc, final String filter,
             final ResultsHandler rh, final OperationOptions oo) {
+
         try {
             new OpenAMExecuteQuery(openAMConfiguration, filter, rh).executeQuery();
         } catch (UnsupportedEncodingException ex) {

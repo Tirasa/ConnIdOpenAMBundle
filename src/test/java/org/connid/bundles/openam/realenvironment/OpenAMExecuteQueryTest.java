@@ -23,25 +23,30 @@
  */
 package org.connid.bundles.openam.realenvironment;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import org.connid.bundles.openam.OpenAMConnector;
 import org.connid.bundles.openam.utilities.SharedMethodsForTests;
 import org.connid.bundles.openam.utilities.TestAccountsValue;
 import org.identityconnectors.framework.common.objects.*;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class OpenAMExecuteQueryTest extends SharedMethodsForTests {
 
     private OpenAMConnector connector = null;
+
     private Name name = null;
+
     private Uid newAccount = null;
+
     private TestAccountsValue attrs = null;
+
     private final static boolean ACTIVE_USER = true;
-    private final static boolean INACTIVE_USER = false;
 
     @Before
     public final void initTest() {
@@ -53,73 +58,62 @@ public class OpenAMExecuteQueryTest extends SharedMethodsForTests {
 
     @Test
     public final void executeQueryOnlyUidTest() {
-        final Set actual = new HashSet();
+        final Set<ConnectorObject> actual = new HashSet<ConnectorObject>();
         newAccount = connector.create(ObjectClass.ACCOUNT,
                 createSetOfAttributes(name, attrs.getPassword(),
                 ACTIVE_USER), null);
-        Assert.assertEquals(name.getNameValue(), newAccount.getUidValue());
+        assertEquals(name.getNameValue(), newAccount.getUidValue());
 
-        connector.executeQuery(ObjectClass.ACCOUNT,
-                "(" + Uid.NAME + "=" + newAccount.getUidValue() + ")",
+        connector.executeQuery(ObjectClass.ACCOUNT, "(" + Uid.NAME + "=" + newAccount.getUidValue() + ")",
                 new ResultsHandler() {
 
                     @Override
-                    public boolean handle(final ConnectorObject co) {
-                        actual.add(co);
+                    public boolean handle(final ConnectorObject connObj) {
+                        actual.add(connObj);
                         return true;
                     }
                 }, null);
-        for (Iterator it = actual.iterator(); it.hasNext();) {
-            Object object = it.next();
-            ConnectorObject co = (ConnectorObject) object;
-            Assert.assertEquals(name.getNameValue(),
-                    co.getName().getNameValue());
+        for (ConnectorObject connObj : actual) {
+            assertEquals(name.getNameValue(), connObj.getName().getNameValue());
         }
         connector.delete(ObjectClass.ACCOUNT, newAccount, null);
-        Assert.assertFalse(connector.existsUser(newAccount.getUidValue()));
+        assertFalse(connector.existsUser(newAccount.getUidValue()));
         connector.dispose();
     }
 
     @Test
     public final void executeQueryWithAndFilterTest() {
-        final Set actual = new HashSet();
-        newAccount = connector.create(ObjectClass.ACCOUNT,
-                createSetOfAttributes(name, attrs.getPassword(),
+        final Set<ConnectorObject> actual = new HashSet<ConnectorObject>();
+        newAccount = connector.create(ObjectClass.ACCOUNT, createSetOfAttributes(name, attrs.getPassword(),
                 ACTIVE_USER), null);
-        Assert.assertEquals(name.getNameValue(), newAccount.getUidValue());
+        assertEquals(name.getNameValue(), newAccount.getUidValue());
 
         connector.executeQuery(ObjectClass.ACCOUNT,
-                "(&(cn=" + name.getNameValue() + ")(sn=" + name.getNameValue()
-                + ")", new ResultsHandler() {
+                "(&(cn=" + name.getNameValue() + ")(sn=" + name.getNameValue() + ")", new ResultsHandler() {
 
             @Override
-            public boolean handle(final ConnectorObject co) {
-                actual.add(co);
+            public boolean handle(final ConnectorObject connObj) {
+                actual.add(connObj);
                 return true;
             }
         }, null);
-        for (Iterator it = actual.iterator(); it.hasNext();) {
-            Object object = it.next();
-            ConnectorObject co = (ConnectorObject) object;
-            Assert.assertEquals(name.getNameValue(),
-                    co.getName().getNameValue());
+        for (ConnectorObject connObj : actual) {
+            assertEquals(name.getNameValue(), connObj.getName().getNameValue());
         }
         connector.delete(ObjectClass.ACCOUNT, newAccount, null);
-        Assert.assertFalse(connector.existsUser(newAccount.getUidValue()));
+        assertFalse(connector.existsUser(newAccount.getUidValue()));
         connector.dispose();
     }
 
     @Test
     public final void executeQueryWithOrFilterTest() {
-        final Set actual = new HashSet();
+        final Set<ConnectorObject> actual = new HashSet<ConnectorObject>();
         newAccount = connector.create(ObjectClass.ACCOUNT,
-                createSetOfAttributes(name, attrs.getPassword(),
-                ACTIVE_USER), null);
-        Assert.assertEquals(name.getNameValue(), newAccount.getUidValue());
+                createSetOfAttributes(name, attrs.getPassword(), ACTIVE_USER), null);
+        assertEquals(name.getNameValue(), newAccount.getUidValue());
 
         connector.executeQuery(ObjectClass.ACCOUNT,
-                "(|(cn=" + name.getNameValue() + ")(sn=" + name.getNameValue()
-                + ")", new ResultsHandler() {
+                "(|(cn=" + name.getNameValue() + ")(sn=" + name.getNameValue() + ")", new ResultsHandler() {
 
             @Override
             public boolean handle(final ConnectorObject co) {
@@ -127,30 +121,27 @@ public class OpenAMExecuteQueryTest extends SharedMethodsForTests {
                 return true;
             }
         }, null);
-        for (Iterator it = actual.iterator(); it.hasNext();) {
-            Object object = it.next();
-            ConnectorObject co = (ConnectorObject) object;
-            Assert.assertEquals(name.getNameValue(),
-                    co.getName().getNameValue());
+        for (ConnectorObject connObj : actual) {
+            assertEquals(name.getNameValue(), connObj.getName().getNameValue());
         }
         connector.delete(ObjectClass.ACCOUNT, newAccount, null);
-        Assert.assertFalse(connector.existsUser(newAccount.getUidValue()));
+        assertFalse(connector.existsUser(newAccount.getUidValue()));
         connector.dispose();
     }
 
     @Test
     public final void executeQueryNotExistingUserTest() {
-        final Set actual = new HashSet();
+        final Set<ConnectorObject> actual = new HashSet<ConnectorObject>();
         connector.executeQuery(ObjectClass.ACCOUNT,
                 "(" + Uid.NAME + "=notexistsuser)", new ResultsHandler() {
 
             @Override
-            public boolean handle(final ConnectorObject co) {
-                actual.add(co);
+            public boolean handle(final ConnectorObject connObj) {
+                actual.add(connObj);
                 return true;
             }
         }, null);
-        Assert.assertEquals(0, actual.size());
+        assertTrue(actual.isEmpty());
         connector.dispose();
     }
 }

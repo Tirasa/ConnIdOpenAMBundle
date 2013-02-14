@@ -23,23 +23,20 @@
  */
 package org.connid.bundles.openam;
 
-import org.connid.bundles.openam.OpenAMFilterTranslator;
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.connid.bundles.openam.utilities.SharedMethodsForTests;
 import org.junit.Test;
 
 public class OpenAMFilterTranslatorTests extends SharedMethodsForTests {
 
-    private OpenAMFilterTranslator openAMFilterTranslator =
-            new OpenAMFilterTranslator();
+    private OpenAMFilterTranslator openAMFilterTranslator = new OpenAMFilterTranslator();
 
     @Test
     public void createFilterTranslator() {
-        String andFilter = openAMFilterTranslator
-                .createAndExpression("uid=testuid", "cn=test");
-        Assert.assertEquals(andFilter, "(&(uid=testuid)(cn=test)");
-        String orFilter = openAMFilterTranslator
-                .createOrExpression("uid=testuid", "cn=test");
-        Assert.assertEquals(orFilter, "(|(uid=testuid)(cn=test)");
+        String andFilter = openAMFilterTranslator.createAndExpression("uid=testuid", "cn=test");
+        assertEquals(andFilter, "(&(uid=testuid)(cn=test)");
+        String orFilter = openAMFilterTranslator.createOrExpression("uid=testuid", "cn=test");
+        assertEquals(orFilter, "(|(uid=testuid)(cn=test)");
     }
 }
