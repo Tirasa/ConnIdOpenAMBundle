@@ -43,8 +43,6 @@ public class OpenAMExecuteQuery extends CommonMethods {
 
     private ResultsHandler handler = null;
 
-    private String uid = "";
-
     private AdminToken adminToken = null;
 
     public OpenAMExecuteQuery(final OpenAMConfiguration configuration, final String ldapFilter, final ResultsHandler rh)
@@ -70,8 +68,7 @@ public class OpenAMExecuteQuery extends CommonMethods {
 
     private void doExecuteQuery()
             throws IOException {
-        String[] uidResults =
-                connection.search(searchParameters(cleanLdapFilter())).split("string=");
+        String[] uidResults = connection.search(searchParameters(cleanLdapFilter())).split("string=");
         LOG.ok("Search committed");
 
         if (uidResults == null || uidResults.length == 1) {
@@ -79,13 +76,11 @@ public class OpenAMExecuteQuery extends CommonMethods {
             return;
         }
 
-        List<String[]> usersList = new ArrayList<String[]>();
+        final List<String[]> usersList = new ArrayList<String[]>();
 
         for (int i = 1; i < uidResults.length; i++) {
-            if (!uidResults[i].startsWith("anonymous")
-                    && !uidResults[i].startsWith("amAdmin")) {
-                usersList.add(connection.read(readParameters(
-                        uidResults[i])).split("identitydetails."));
+            if (!uidResults[i].startsWith("anonymous") && !uidResults[i].startsWith("amAdmin")) {
+                usersList.add(connection.read(readParameters(uidResults[i])).split("identitydetails."));
             }
         }
 
@@ -95,38 +90,31 @@ public class OpenAMExecuteQuery extends CommonMethods {
         for (Iterator<String[]> it = usersList.iterator(); it.hasNext();) {
             String[] userDetails = it.next();
             for (int i = 0; i < userDetails.length; i++) {
-                if (userDetails[i].contains("name")) {
+                if (userDetails[i].contains("name=")) {
                     attributesList.clear();
                     String[] names = userDetails[i].split("=");
                     name = names[1];
-                    for (int j = i + 1; j < userDetails.length; j++) {
-                        if (userDetails[j].contains("name")) {
-                            break;
-                        }
-                        if (userDetails[j].contains("value")) {
+                    for (int j = i + 1; j < userDetails.length && !userDetails[j].contains("name="); j++) {
+                        if (userDetails[j].contains("value=")) {
                             String[] value = userDetails[j].split("=");
                             attributesList.add(value[1].trim());
                         }
                     }
                 }
-                if (name != null && name.toLowerCase().contains(
-                        configuration.getOpenamUidAttribute().
-                        toLowerCase())) {
+                if (name != null
+                        && name.toLowerCase().contains(configuration.getOpenamUidAttribute().toLowerCase())) {
                     bld.setUid(attributesList.get(0));
                     bld.setName(attributesList.get(0));
                 }
-                if (name != null && name.toLowerCase().contains(
-                        configuration.getOpenamStatusAttribute().
-                        toLowerCase())) {
-                    bld.addAttribute(OperationalAttributes.ENABLE_NAME,
-                            InetUserStatus.ACTIVE.equalsIgnoreCase(
-                            attributesList.get(0)));
+                if (name != null
+                        && name.toLowerCase().contains(configuration.getOpenamStatusAttribute().toLowerCase())) {
+                    bld.addAttribute(AttributeBuilder.buildEnabled(
+                            InetUserStatus.ACTIVE.equalsIgnoreCase(attributesList.get(0))));
                 }
 
                 if (name != null && name.contains("objectclass")) {
                     for (int j = 0; j < attributesList.size(); j++) {
-                        bld.setObjectClass(
-                                new ObjectClass(attributesList.get(j)));
+                        bld.setObjectClass(new ObjectClass(attributesList.get(j)));
                     }
                 }
 

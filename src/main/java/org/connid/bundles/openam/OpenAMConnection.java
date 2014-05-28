@@ -37,8 +37,6 @@ public class OpenAMConnection {
 
     private static final Log LOG = Log.getLog(OpenAMConnection.class);
 
-    private OpenAMConfiguration configuration = null;
-
     private final RestfulClientMethods restfulClient =
             new RestfulClientMethods();
 
@@ -48,18 +46,14 @@ public class OpenAMConnection {
     private UrlFactory urlFactory = null;
 
     private OpenAMConnection(final OpenAMConfiguration configuration) {
-        this.configuration = configuration;
         urlFactory = new UrlFactory(configuration);
     }
 
-    public static OpenAMConnection openConnection(
-            final OpenAMConfiguration configuration) {
-
+    public static OpenAMConnection openConnection(final OpenAMConfiguration configuration) {
         return new OpenAMConnection(configuration);
     }
 
-    public String authenticate(final String username, final String password)
-            throws HttpClientErrorException {
+    public String authenticate(final String username, final String password) throws HttpClientErrorException {
         try {
             return restfulClient.getMethod(new URI(urlFactory.authenticateUrl(username, password)));
         } catch (URISyntaxException e) {
@@ -98,18 +92,15 @@ public class OpenAMConnection {
         return restfulClient.getMethod(urlFactory.searchUrl(parameters));
     }
 
-    public String search(final String parameters)
-            throws IOException {
+    public String search(final String parameters) throws IOException {
         return httpClientMethods.get(urlFactory.searchUrl(parameters));
     }
 
-    public String read(final String parameters)
-            throws HttpClientErrorException {
+    public String read(final String parameters) throws HttpClientErrorException {
         return restfulClient.getMethod(urlFactory.readUrl(parameters));
     }
 
-    public boolean isAlive()
-            throws IOException {
+    public boolean isAlive() throws IOException {
         Integer statusCode = new Integer(httpClientMethods.getMethod(urlFactory.testUrl()));
         return statusCode.equals(HttpStatus.SC_OK);
     }
