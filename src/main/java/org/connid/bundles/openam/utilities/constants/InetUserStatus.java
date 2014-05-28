@@ -24,6 +24,6 @@ package org.connid.bundles.openam.utilities.constants;
 
 public class InetUserStatus {
 
-    public static final String ACTIVE = "active";
-    public static final String INACTIVE = "inactive";
+    public static final String ACTIVE = "Active";
+    public static final String INACTIVE = "Inactive";
 }
