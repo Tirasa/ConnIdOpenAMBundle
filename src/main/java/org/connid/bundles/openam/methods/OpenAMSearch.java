@@ -64,8 +64,7 @@ public class OpenAMSearch extends CommonMethods {
     public final boolean doExistsUser()
             throws IOException {
         try {
-            boolean userExists =
-                    userExists(uid, configuration.getOpenamRealm(), adminToken.getToken(), connection);
+            boolean userExists = userExists(uid, configuration.getOpenamRealm(), adminToken.getToken(), connection);
             connection.logout(adminToken.getToken());
             return userExists;
         } catch (HttpClientErrorException hcee) {
