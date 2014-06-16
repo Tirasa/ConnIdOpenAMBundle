@@ -37,7 +37,7 @@
     
   <groupId>org.connid.bundles</groupId>
   <artifactId>org.connid.bundles.openam</artifactId>
-  <version>0.4.1-SNAPSHOT</version>
+  <version>0.4.1</version>
     
   <packaging>jar</packaging>
     
